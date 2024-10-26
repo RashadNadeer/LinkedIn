@@ -1,39 +1,79 @@
 
-# LinkedIn Saved Posts Removal Script
+# LinkedIn Saved Posts Management Script
 
-This JavaScript script helps you automatically remove all visible saved posts on LinkedIn by interacting with each post's overflow menu.
+This JavaScript script allows you to automatically manage saved posts on LinkedIn by either "unsaving" or "removing" all visible posts through the overflow menu options.
 
 ## How It Works
 
 ### 1. Identify Overflow Menus
-The script first selects all elements with the attribute `data-test-icon="overflow-web-ios-medium"`, typically corresponding to the three-dot overflow menu icons on LinkedIn posts.
+The script selects all elements with the attribute `data-test-icon="overflow-web-ios-medium"`, which usually corresponds to the three-dot overflow menu icons on LinkedIn posts.
 
-### 2. Iterative Removal Process
-For each overflow icon found, the script performs the following actions:
-- **Remove the `inert` Attribute:** If present, this attribute prevents interaction. The script removes it to enable interaction.
-- **Click the Overflow Icon:** The script clicks the icon’s parent element (often an anchor or `<div>` that contains the SVG) to open the options menu.
+### 2. Iterative Process for Unsave or Remove
+For each overflow icon found, the script performs these actions:
+- **Remove the `inert` Attribute (if present):** The script removes this attribute to allow interaction.
+- **Click the Overflow Icon:** It then clicks the parent element (often an anchor or `<div>` holding the SVG) to open the options menu.
 
-### 3. Remove Action
-After a brief delay to ensure the menu is fully loaded, the script searches for a `<span>` element containing the text "Remove."
-- If the "Remove" option is found, it clicks this option to remove the post from the saved list.
+### 3. Action (Unsave or Remove)
+After a brief delay to ensure the menu is fully loaded, the script will locate either the "Unsave" or "Remove" option based on your choice.
+- If the "Unsave" option is found, it clicks to remove the post from the saved list.
+- If the "Remove" option is found, it clicks to delete the post.
 
 ### 4. Timing Considerations
-Each iteration includes a unique delay, ensuring that each menu opens and closes without interfering with other interactions. This approach avoids overlap between actions.
+Each iteration includes a delay to ensure each menu interaction completes without interference, preventing action overlap.
 
 ## Usage Instructions
 
 1. **Open LinkedIn Saved Posts:** 
-   Navigate to your LinkedIn saved posts page to ensure that the posts you want to remove are visible on the screen.
+   Go to your LinkedIn saved posts page so that the posts you want to manage are visible on the screen.
 
 2. **Open Developer Console:** 
    Open your browser’s Developer Console by pressing `F12` or `Ctrl+Shift+J` (Windows/Linux) or `Cmd+Option+J` (Mac).
 
-3. **Paste and Run the Script:** 
-   Copy and paste the code into the console and press **Enter** to execute.
+3. **Paste and Run the Desired Script:**
+   Copy and paste either the "Unsave" or "Remove" code below into the console and press **Enter** to execute.
 
-   > **Note:** Adjust the delay values in the code if the LinkedIn interface requires longer loading times for each menu.
+   > **Note:** Adjust delay values if LinkedIn’s interface takes longer to load each menu.
 
-## Code Example
+---
+
+## Code Example for Unsave
+
+This script unsaves each visible post on the page.
+
+```javascript
+// Select all visible overflow menu icons in the view
+let overflowMenus = Array.from(document.querySelectorAll('svg[data-test-icon="overflow-web-ios-medium"]'));
+
+overflowMenus.forEach((icon, index) => {
+    setTimeout(() => {
+        // Step 1: Remove the 'inert' attribute if present and open the overflow menu
+        if (icon.hasAttribute('inert')) {
+            icon.removeAttribute('inert');
+        }
+        icon.parentElement.click(); // Open the overflow menu
+        console.log(`Overflow menu ${index + 1} clicked.`);
+        
+        // Step 2: Wait briefly to allow the menu to open, then locate and click "Unsave"
+        setTimeout(() => {
+            let unsaveOption = Array.from(document.querySelectorAll('span'))
+                .find(span => span.textContent.includes('Unsave'));
+
+            if (unsaveOption) {
+                unsaveOption.click();
+                console.log(`Post ${index + 1} unsaved!`);
+            } else {
+                console.log(`Unsave option not found for post ${index + 1}.`);
+            }
+        }, 500); // Adjust delay as needed
+    }, index * 1000); // Delay each iteration to avoid overlapping clicks
+});
+```
+
+---
+
+## Code Example for Remove
+
+This script removes each visible post on the page.
 
 ```javascript
 // Select all visible overflow menu icons in the view
@@ -63,6 +103,8 @@ overflowMenus.forEach((icon, index) => {
     }, index * 1000); // Delay each iteration to avoid overlapping clicks
 });
 ```
+
+---
 
 ## Limitations
 
