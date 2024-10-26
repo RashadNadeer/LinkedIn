@@ -13,6 +13,7 @@ LinkedIn’s saved posts are accessible through an overflow menu represented by 
 ## Code
 
 ```javascript
+
 // Select all visible overflow menu icons in the view
 let overflowMenus = Array.from(document.querySelectorAll('svg[data-test-icon="overflow-web-ios-medium"]'));
 
